@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "tradehighlight",
+	"version": "${version}",
+	"name": "TradeHighlight",
+	"description": "Highlights the best villager trades with a colored border and a sound. Choose your enchantments in Mod Menu. Client-side only.",
+	"authors": [
+		"xuqor"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/tradehighlight/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.xuqor.tradehighlight.TradeHighlight"
+		],
+		"client": [
+			"com.xuqor.tradehighlight.client.TradeHighlightClient"
+		],
+		"modmenu": [
+			"com.xuqor.tradehighlight.client.TradeHighlightModMenu"
+		]
+	},
+	"mixins": [
+		"tradehighlight.mixins.json",
+		{
+			"config": "tradehighlight.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~1.21.11",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}
