@@ -1,6 +1,7 @@
 package com.xuqor.tradehighlight.client;
 
 import com.xuqor.tradehighlight.client.mixin.AbstractContainerScreenAccessor;
+import com.xuqor.tradehighlight.client.mixin.MerchantMenuAccessor;
 import com.xuqor.tradehighlight.client.mixin.MerchantScreenAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -16,7 +17,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
@@ -81,7 +82,7 @@ public class TradeHighlightClient implements ClientModInitializer {
 	}
 
 	private static void trackReroll(MerchantScreen screen) {
-		Merchant trader = screen.getMenu().getTrader();
+		Merchant trader = ((MerchantMenuAccessor) screen.getMenu()).tradehighlight$getTrader();
 		Merchant previous = lastTrader == null ? null : lastTrader.get();
 		if (trader == previous) {
 			rerollCount++;
@@ -187,9 +188,9 @@ public class TradeHighlightClient implements ClientModInitializer {
 			net.minecraft.core.BlockPos pos, net.minecraft.core.Direction direction) {
 		TradeHighlightConfig cfg = TradeHighlightConfig.get();
 		if (!cfg.doubleBreakProtection || !guarded) return InteractionResult.PASS;
-		if (!level.isClientSide) return InteractionResult.PASS;
+		if (!level.isClientSide()) return InteractionResult.PASS;
 
-		ResourceLocation protectedId = ResourceLocation.tryParse(cfg.protectedBlockId);
+		Identifier protectedId = Identifier.tryParse(cfg.protectedBlockId);
 		if (protectedId == null) return InteractionResult.PASS;
 
 		Block block = BuiltInRegistries.BLOCK.getValue(protectedId);

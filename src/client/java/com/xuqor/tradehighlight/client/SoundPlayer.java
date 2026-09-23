@@ -4,7 +4,7 @@ import com.xuqor.tradehighlight.TradeHighlight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.BufferUtils;
@@ -55,8 +55,8 @@ final class SoundPlayer {
 	}
 
 	private static void playVanilla(String soundId, float volume) {
-		SoundEvent event = SoundEvents.PLAYER_LEVELUP.value();
-		ResourceLocation id = ResourceLocation.tryParse(soundId);
+		SoundEvent event = SoundEvents.PLAYER_LEVELUP;
+		Identifier id = Identifier.tryParse(soundId);
 		if (id != null) {
 			SoundEvent found = BuiltInRegistries.SOUND_EVENT.getValue(id);
 			if (found != null) event = found;
@@ -118,8 +118,8 @@ final class SoundPlayer {
 
 			ShortBuffer pcm = MemoryUtil.memAllocShort(totalSamples);
 			try {
-				STBVorbis.stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm, totalSamples);
-				pcm.flip();
+				int decodedSamples = STBVorbis.stb_vorbis_get_samples_short_interleaved(decoder, channels, pcm);
+				pcm.position(0).limit(decodedSamples * channels);
 
 				byte[] pcmBytes = new byte[pcm.remaining() * 2];
 				ByteBuffer.wrap(pcmBytes).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().put(pcm);
